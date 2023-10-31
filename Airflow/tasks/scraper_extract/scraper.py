@@ -62,6 +62,7 @@ class Scraper:
         try:
             response = requests.get(url)
             soup = BeautifulSoup(response.text, "html.parser")
+
         except requests.exceptions.RequestException as e:
             logging.log(e)
 
@@ -96,9 +97,9 @@ class Scraper:
         Args:
             device_data (list[dict]): List of dictionaries containing each device
             device_type (str): String specifiying the type of device: headphones or iems
-            data_level (str): Signifies the level of data, ie, gold, bronze, silver
+            data_level (str): Signifies the level of data, ie, raw, transform, prepared
         """
-        with open(f"/tmp/{device_type}-{data_level}.csv", "w") as csvfile:
+        with open(f"test/{device_type}-{data_level}.csv", "w", encoding='UTF-8') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=device_data[0].keys())
             writer.writeheader()
             writer.writerows(device_data)
@@ -110,6 +111,6 @@ if __name__ == "__main__":
     iems = scraper.scrape(device_type="iems")
 
     scraper.convert_to_csv(device_data=headphones,
-                           device_type="headphones", data_level="bronze")
+                           device_type="headphones", data_level="raw")
     scraper.convert_to_csv(
-        device_data=iems, device_type="iems", data_level="bronze")
+        device_data=iems, device_type="iems", data_level="raw")
